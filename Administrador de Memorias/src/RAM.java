@@ -1,8 +1,4 @@
-
-
 import aux_classes.input_output.*;
-
-
 
 public class RAM{
 	
@@ -65,7 +61,7 @@ public static byte menu(){
 				Print.outSln("4.- Modificar datos de algun vendedor");
 				Print.outSln("5.- Borrar a algun vendedor");
 				Print.endl(2);
-				Print.outSln("9.- Generar datos aleatorios");
+				Print.outSln("9.- Generar Procesos aleatorios");
 				Print.outSln("10.- Acerca del Programa");
 				Print.endl(1);
 				opc = C.in_byte("Seleccione una opcion: [  ]\b\b\b");
@@ -79,7 +75,7 @@ public static byte menu(){
 		System.out.println("\n\n");
 		}
 	System.out.print("          ");
-//	System.out.println("Primer Taller de Programacion 2");
+	System.out.println("Administrador de Procesos");
 	System.out.println("\n\n");
 	System.out.print("          ");
 	System.out.println("Programa realizado por: Nestor Luis Tobon Arrieta");
