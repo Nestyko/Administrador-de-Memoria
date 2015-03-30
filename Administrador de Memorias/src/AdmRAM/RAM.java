@@ -4,9 +4,12 @@ import aux_classes.input_output.*;
 
 public class RAM{
 	
+	public static int busy_memory;
 	public static boolean memory_exists = false;
 	public static int memory_size;
+	public static final Proceso OS = new Proceso(256,"SISTEMA OPERATIVO");
 	public static ArrayList<Proceso> procesos = new ArrayList<Proceso>();
+	public static ArrayList<Segment> memory = new ArrayList<>();
 	
 	public static void main(String[] args){
 
@@ -23,14 +26,24 @@ public class RAM{
 					}
 				case 1:{
 					memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
+					while(memory_size <= 256){
+						Print.errorCen("El sistema operativo necesita por lo menos 256 para funcionar");
+						memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
+					}
+					Segment OS_seg = new Segment(OS, 0);
+					memory.add(OS_seg);
+					Segment free = new Segment((memory_size-OS.getSize()), OS.getSize());
+					memory.add(free);
 					memory_exists = true;	
 					opc = 0;
 					continue;
 				}//case 1
 				case 2:{
 					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
-					Proceso nuevo = new Proceso(pSize);
-					procesos.add(nuevo);
+					String pName =  C.in_String("Ingrese el nombre del proceso");
+					Proceso nuevo = new Proceso(pSize, pName);
+					//procesos.add(nuevo);
+					
 					
 					break;
 				}
@@ -60,7 +73,7 @@ public class RAM{
 public static byte menu(){
 	
 	String[] opciones = {
-		"2.- Ingresar un Proceso",
+		"2.- Ingresar un Proceso y Asignarlo por Primer Ajuste",
 		"9.- Generar Procesos aleatorios"
 	};
    byte opc;
@@ -86,6 +99,25 @@ public static byte menu(){
 							
 
 	}//menu
+
+	public static void assingProcessFM(Proceso process){
+		for (Segment segment : memory) {
+			if((segment.isBusy() == false) && (process.getSize() <= segment.getSize())){
+				int index = memory.indexOf(segment);
+				int size = memory.get(index).getSize();
+				segment.setProcess(process);
+				if(segment.getSize() < size){
+					Segment nuevo = new Segment(size-segment.getSize(),
+							memory.get(index).getMemoryPT()+memory.get(index).getSize());
+					memory.add(index+1, nuevo);
+				}
+				break;
+			}
+		}
+		
+	}
+	
+
 	
 	public static final void acerca_de(){
 	for(int i = 0;i<15;i++){
