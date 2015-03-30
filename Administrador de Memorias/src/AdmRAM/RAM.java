@@ -3,10 +3,13 @@ import java.util.ArrayList;
 import aux_classes.input_output.*;
 
 public class RAM{
+	public static int memory_size;
+	public static final Proceso OS_PROCESS = new Proceso(256,"Sistema Operativo");
 	
 	public static boolean memory_exists = false;
-	public static int memory_size;
+	
 	public static ArrayList<Proceso> procesos = new ArrayList<Proceso>();
+	public static ArrayList<Segment> memory = new ArrayList<Segment>();
 	
 	public static void main(String[] args){
 
@@ -22,15 +25,26 @@ public class RAM{
 
 					}
 				case 1:{
-					memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
+					do{
+						memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
+						if(memory_size < OS_PROCESS.getSize()){
+							Print.errorCen("La memoria no tiene espacio suficinete para almacenar el SO");
+						}
+					}while(memory_size < OS_PROCESS.getSize());
+					Segment OS = new Segment(OS_PROCESS, (memory_size-OS_PROCESS.getSize()));
+					memory.add(OS);
+					memory.add(new Segment(memory_size-OS_PROCESS.getSize(),0));
+					
+					
 					memory_exists = true;	
 					opc = 0;
 					continue;
 				}//case 1
 				case 2:{
 					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
-					Proceso nuevo = new Proceso(pSize);
-					procesos.add(nuevo);
+					String name = C.in_String("Ingrese el nombre del Proceso: ");
+					Proceso nuevo = new Proceso(pSize, name);
+					assingProcessFM(nuevo);
 					
 					break;
 				}
@@ -86,6 +100,44 @@ public static byte menu(){
 							
 
 	}//menu
+	/**
+	 * Asigna un proceso en memoria y Verifica que el proceso quepa en la memoria
+	 * @param process es el proceso a asignar en memoria
+	 */
+	public static void assingProcessFM(Proceso process){
+		for (Segment segment : memory) {
+			if((!segment.isBusy())&&(segment.getSize() < process.getSize())){
+				divideSegment(segment, process);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Divide un segmento del ArrayList memory en dos partes una para el proceso y 
+	 * otra para el espacio libre si es que lo hay.
+	 * @param segment es el segmento a dividir
+	 * @param process es el segmento a introducir en el segmento
+	 */
+	private static void divideSegment(Segment segment, Proceso process){
+		int index = memory.indexOf(segment);
+		if(index != -1){
+			memory.add(new Segment(process.size(),));
+			memory.get(index).setProceso(process);
+		}
+		cleanMemory();
+	}
+	
+	/**
+	 * Remueve los segmentos que tengan un tamaño = 0
+	 */
+	private static void cleanMemory(){
+		for (Segment segment : memory) {
+			if(segment.getSize() == 0){
+				memory.remove(segment);
+			}
+		}
+	}
 	
 	public static final void acerca_de(){
 	for(int i = 0;i<15;i++){

@@ -1,35 +1,56 @@
 package AdmRAM;
 
+import aux_classes.input_output.Print;
+
 public class Proceso {
-	private int size;
+	private String name = "";
+	protected int size;
 	private boolean wait;
 	private boolean error;
 	private byte priority;
 	/**
 	 * Procces Pointer: Apunta a al comienzo de su direccion de memoria
 	 */
-	private int proccesPt;
+	protected int memoryPT;
 	
 	
 	/**
-	 * Crea un proceso solo con su tamaño
+	 * Crea un proceso solo con su tamaño y su nombre
 	 * @param size 
+	 * @param name es el nombre del proceso
 	 */
-	public Proceso(int size) {
+	public Proceso(int size , String name) {
 		this.size = size;
+		this.name = name;
 	}
 
-
+	
 	/**
-	 * Crea un proceso y le indica si esta esperando y donde se ubica en memoria
-	 * @param size
-	 * @param wait estado del proceso
-	 * @param proccesPt direccion en memoria
+	 * Crea un proceso especificamente para un segmento de memoria
+	 * @param size tamaño del proceso
+	 * @param memoryPT direccion en memoria donde empieza el proceso
 	 */
-	public Proceso(int size, boolean wait, int proccesPt) {
+	protected Proceso(int size, int memoryPT){
 		this.size = size;
-		this.wait = wait;
-		this.proccesPt = proccesPt;
+		this.memoryPT = memoryPT;
+		this.wait = false;
+	}
+	
+	/**
+	 * Crea un proceso
+	 * @param size tamaño del proceso
+	 * @param name es el nombre del proceso
+	 */
+	protected Proceso(int size, int memoryPT, String name){
+		this.size = size;
+		this.memoryPT = memoryPT;
+		this.wait = false;
+		this.name = name;
+	}
+	
+	public void info(){
+		Print.outSln("Proceso: " + name);
+		Print.outSln("Tamaño: ");
 	}
 
 
@@ -73,14 +94,24 @@ public class Proceso {
 	}
 
 
-	public int getProccesPt() {
-		return proccesPt;
+	public int getMemoryPt() {
+		return memoryPT;
 	}
 
 
-	public void setProccesPt(int proccesPt) {
-		this.proccesPt = proccesPt;
+	public void setMemoryPT(int proccesPt) {
+		this.memoryPT = proccesPt;
 	}
+	
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	
 	
 
