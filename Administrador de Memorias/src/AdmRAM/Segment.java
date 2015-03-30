@@ -1,4 +1,5 @@
 package AdmRAM;
+import aux_classes.input_output.Print;
 
 public class Segment {
 	private int memoryPT;
@@ -30,6 +31,18 @@ public class Segment {
 		this.memoryPT = memoryPT;
 		busy = false;
 		process = null;
+	}
+	
+	public void info(){
+		if(busy){
+			Print.outSln("Nombre: " + process.getName());
+			Print.outSln("Tamaño: " + size);
+			Print.outSln("Ubicacion en memoria: Desde: " + memoryPT + ", Hasta: " + (memoryPT+size));
+		}else{
+			Print.outSln("Segmento Libre");
+			Print.outSln("Tamaño: " + size);
+			Print.outSln("Ubicacion en memoria: Desde: " + memoryPT + ", Hasta: " + (memoryPT+size));
+		}
 	}
 	
 	public int getMemoryPT(){

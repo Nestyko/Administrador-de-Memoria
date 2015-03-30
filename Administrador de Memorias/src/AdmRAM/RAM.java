@@ -7,7 +7,7 @@ public class RAM{
 	public static int busy_memory;
 	public static boolean memory_exists = false;
 	public static int memory_size;
-	public static final Proceso OS = new Proceso(256,"SISTEMA OPERATIVO");
+	public static final Proceso OS = new Proceso(200,"SISTEMA OPERATIVO");
 	public static ArrayList<Proceso> procesos = new ArrayList<Proceso>();
 	public static ArrayList<Segment> memory = new ArrayList<>();
 	
@@ -42,9 +42,16 @@ public class RAM{
 					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
 					String pName =  C.in_String("Ingrese el nombre del proceso");
 					Proceso nuevo = new Proceso(pSize, pName);
+					assingProcessFM(nuevo);
 					//procesos.add(nuevo);
-					
-					
+					break;
+				}
+				case 4:{
+					for (Segment segment : memory) {
+						Print.outSln("Segmento " + memory.indexOf(segment));
+						segment.info();
+					}
+					Print.pausa("PRESIONE ENTER PARA CONTINUAR");
 					break;
 				}
 				
@@ -74,6 +81,7 @@ public static byte menu(){
 	
 	String[] opciones = {
 		"2.- Ingresar un Proceso y Asignarlo por Primer Ajuste",
+		"4.- Mostrar la memoria RAM",
 		"9.- Generar Procesos aleatorios"
 	};
    byte opc;
