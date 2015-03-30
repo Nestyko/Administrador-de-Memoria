@@ -122,7 +122,7 @@ public static byte menu(){
 	private static void divideSegment(Segment segment, Proceso process){
 		int index = memory.indexOf(segment);
 		if(index != -1){
-			memory.add(new Segment(process.size(),));
+			//memory.add(new Segment(process.size(),));
 			memory.get(index).setProceso(process);
 		}
 		cleanMemory();
