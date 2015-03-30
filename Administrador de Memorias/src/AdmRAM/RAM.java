@@ -1,6 +1,12 @@
+package AdmRAM;
+import java.util.ArrayList;
 import aux_classes.input_output.*;
 
 public class RAM{
+	
+	public static boolean memory_exists = false;
+	public static int memory_size;
+	public static ArrayList<Proceso> procesos = new ArrayList<Proceso>();
 	
 	public static void main(String[] args){
 
@@ -16,11 +22,18 @@ public class RAM{
 
 					}
 				case 1:{
-
-					
+					memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
+					memory_exists = true;	
 					opc = 0;
 					continue;
 				}//case 1
+				case 2:{
+					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
+					Proceso nuevo = new Proceso(pSize);
+					procesos.add(nuevo);
+					
+					break;
+				}
 				
 				case 10:{
 					acerca_de();
@@ -45,23 +58,27 @@ public class RAM{
 
 
 public static byte menu(){
-
+	
+	String[] opciones = {
+		"2.- Ingresar un Proceso",
+		"9.- Generar Procesos aleatorios"
+	};
    byte opc;
 			Print.separador();
-				//C.outCenln("Empresa X");
+				Print.outCenln("Administrador de Memoria");
 				Print.endl(1);
 				Print.separador();
 				Print.espacio(40);
-				Print.outln("Numero de Vendedores registrados: ");// + variable que cuenta el numero de vendedores
+				Print.outln("Cantidad de procesos: " + procesos.size());
 				Print.endl(1);
 				Print.outSln("0.- Salir del Programa");
-				Print.outSln("1.- Ingresar datos de un Vendedor");
-				Print.outSln("2.- Mostrar datos de los Vendedores");
-				Print.outSln("3.- Mostrar las ganancias obtenidas por la empresa");
-				Print.outSln("4.- Modificar datos de algun vendedor");
-				Print.outSln("5.- Borrar a algun vendedor");
+				Print.outSln("1.- Ir a comprar Memoria RAM");
+				if(memory_exists){
+					for (int i = 0; i < opciones.length; i++) {
+						Print.outSln(opciones[i]);
+					}
+				}	
 				Print.endl(2);
-				Print.outSln("9.- Generar Procesos aleatorios");
 				Print.outSln("10.- Acerca del Programa");
 				Print.endl(1);
 				opc = C.in_byte("Seleccione una opcion: [  ]\b\b\b");
