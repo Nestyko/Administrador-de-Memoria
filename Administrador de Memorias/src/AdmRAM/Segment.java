@@ -67,9 +67,14 @@ public class Segment {
 
 	public void setProcess(Proceso process) {
 		this.process = process;
-		busy = true;
-		process.setWait(false);
-		this.size = process.getSize();
+		if(process != null){
+			busy = true;
+			process.setWait(false);
+			this.size = process.getSize();
+		}else{
+			busy= false;
+		}
+		
 	}
 
 	public boolean isBusy() {

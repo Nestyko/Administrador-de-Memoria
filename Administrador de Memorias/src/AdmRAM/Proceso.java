@@ -1,5 +1,7 @@
 package AdmRAM;
 
+import aux_classes.input_output.Print;
+
 public class Proceso {
 	private int size;
 	private String name;
@@ -16,6 +18,12 @@ public class Proceso {
 		this.size = size;
 		this.name = name;
 	}
+	
+	public void info(){
+		Print.outSln("Nombre: " + name);
+		Print.outSln("Tamaño:_" + size);
+	}
+	
 	public int getSize() {
 		return size;
 	}
