@@ -63,6 +63,7 @@ public class RAM{
 					
 				}
 				case 4:{
+					//new GMemory(memory);
 					RAMinfo();
 					Print.endl(1);
 					Print.outSln("Procesos en Espera: ");
