@@ -35,14 +35,27 @@ public class Segment {
 	
 	public void info(){
 		if(busy){
-			Print.outSln("Nombre: " + process.getName());
-			Print.outSln("Tamaño: " + size);
-			Print.outSln("Ubicacion en memoria: Desde: " + memoryPT + ", Hasta: " + (memoryPT+size));
+			printHyphen(memoryPT+"");
+			Print.outSln("| Nombre: " + process.getName());
+			Print.outSln("| Tamaño: " + size);
+			printHyphen((memoryPT+size)+"");
 		}else{
-			Print.outSln("Segmento Libre");
-			Print.outSln("Tamaño: " + size);
-			Print.outSln("Ubicacion en memoria: Desde: " + memoryPT + ", Hasta: " + (memoryPT+size));
+			printHyphen(memoryPT+"");
+			Print.outSln("| Segmento Libre");
+			Print.outSln("| Tamaño: " + size);
+			printHyphen((memoryPT+size)+"");
 		}
+	}
+	
+	public void printHyphen(String line){
+		int length = 0;
+		length = ((line)+"").length();
+		length = 50-length;
+		Print.outS(line+"");
+		for(int i = 0;i< length;i++){
+			Print.out("-");
+		}
+		System.out.println();
 	}
 	
 	public int getMemoryPT(){

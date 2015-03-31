@@ -43,7 +43,7 @@ public class RAM{
 				}//case 1
 				case 2:{
 					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
-					String pName =  C.in_String("Ingrese el nombre del proceso");
+					String pName =  C.in_String("Ingrese el nombre del proceso: ");
 					Proceso nuevo = new Proceso(pSize, pName);
 					if(assingProcessFM(nuevo)){
 						break;
@@ -64,6 +64,8 @@ public class RAM{
 				}
 				case 4:{
 					RAMinfo();
+					Print.endl(1);
+					Print.outSln("Procesos en Espera: ");
 					processWaitInfo();
 					Print.pausa("PRESIONE ENTER PARA CONTINUAR");
 					break;
@@ -96,8 +98,7 @@ public static byte menu(){
 	String[] opciones = {
 		"2.- Ingresar un Proceso y Asignarlo por Primer Ajuste",
 		"3.- Ingresar un Proceso y Asignarlo por Mejor Ajuste",
-		"4.- Mostrar la memoria RAM",
-		"9.- Generar Procesos aleatorios"
+		"4.- Mostrar la memoria RAM"
 	};
    byte opc;
 			Print.separador();
