@@ -23,8 +23,9 @@ public class Segment {
 	
 	/**
 	 * Crea un segmento libre, es decir, sin proceso
-	 * @param size es el tamaño del segmento
-	 * @param memoryPT Memory Pointer: es la direccion de memoria en donde empieza el segmento
+	 * @param size es el capacidad del segmento
+	 * @param memoryPT Memory Pointer: es la direccion de 
+	 * memoria en donde empieza el segmento
 	 */
 	public Segment(int size, int memoryPT){
 		this.size = size;
@@ -36,17 +37,24 @@ public class Segment {
 	public void info(){
 		if(busy){
 			printHyphen(memoryPT+"");
-			Print.outSln("| Nombre: " + process.getName());
-			Print.outSln("| Tamaño: " + size);
+			Print.outSln("| Ocupado ");
+			Print.outSln("| Capacidad: " + size);
 			printHyphen((memoryPT+size)+"");
 		}else{
 			printHyphen(memoryPT+"");
 			Print.outSln("| Segmento Libre");
-			Print.outSln("| Tamaño: " + size);
+			Print.outSln("| Capacidad: " + size);
 			printHyphen((memoryPT+size)+"");
 		}
 	}
 	
+	
+	/**
+	 * imprime una linea con guiones que abarque 50 
+	 * espacios contando la longitud de line
+	 * @param line es el String  con el que comienza 
+	 * y luego se empieza a colocar la linea de guiones
+	 */
 	public void printHyphen(String line){
 		int length = 0;
 		length = ((line)+"").length();

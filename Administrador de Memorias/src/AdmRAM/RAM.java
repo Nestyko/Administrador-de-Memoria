@@ -8,9 +8,10 @@ public class RAM{
 	public static boolean memory_exists = false;
 	public static int memory_size;
 	public static int maximum_available;
-	public static final Proceso OS = new Proceso(200,"SISTEMA OPERATIVO");
+	public static final Proceso OS = new Proceso(200);
 	public static ArrayList<Proceso> procesos = new ArrayList<Proceso>();
 	public static ArrayList<Segment> memory = new ArrayList<>();
+	public static byte method = 0;
 
 	public static void main(String[] args){
 
@@ -26,9 +27,18 @@ public class RAM{
 
 					}
 				case 1:{
+					if(memory_exists){
+						Print.errorCen("La memoria ya ha sido asignada y no puede ser modificada");
+						opc = 0;
+						break;
+					}
 					memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
 					while(memory_size <= 256){
 						Print.errorCen("El sistema operativo necesita por lo menos 256 para funcionar");
+						memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
+					}
+					while(memory_size > 1024){
+						Print.errorCen("La maxima cantidad de memoria es 1024");
 						memory_size = C.unsigned(C.in_int(("Cuanta memoria desea: ")));
 					}
 					Segment OS_seg = new Segment(OS, 0);
@@ -42,23 +52,34 @@ public class RAM{
 					continue;
 				}//case 1
 				case 2:{
-					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
-					String pName =  C.in_String("Ingrese el nombre del proceso: ");
-					Proceso nuevo = new Proceso(pSize, pName);
-					if(assingProcessFM(nuevo)){
-						break;
+					if((method == 0) || (method == 1)){
+						method = 1;
+						int pSize = C.unsigned(C.in_int("Ingrese el tamaï¿½o del proceso: "));
+						Proceso nuevo = new Proceso(pSize);
+						if(assingProcessFM(nuevo)){
+							break;
+						}else{
+							nuevo.setWait(true);
+							procesos.add(nuevo);
+						}
 					}else{
-						nuevo.setWait(true);
-						procesos.add(nuevo);
+						Print.errorCen("          El metodo MEJOR AJUSTE ya fue establecido."
+								+ "\n          Por favor vuelva al menu y presione 3 para seguir ingresando");
 					}
 					//procesos.add(nuevo);
 					break;
 				}
 				case 3:{
-					int pSize = C.unsigned(C.in_int("Ingrese el tamaño del proceso: "));
-					String pName =  C.in_String("Ingrese el nombre del proceso");
-					Proceso nuevo = new Proceso(pSize, pName);
-					assingProcessBM(nuevo);
+					if((method == 0) || (method == 2)){
+						int pSize = C.unsigned(C.in_int("Ingrese el tamaï¿½o del proceso: "));
+						Proceso nuevo = new Proceso(pSize);
+						assingProcessBM(nuevo);
+					}else{
+						Print.errorCen("El metodo PRIMER AJUSTE ya fue establecido."
+								+ "\n          Por favor vuelva al menu y presione 2 para seguir ingresando");
+					}
+					
+					
 					break;
 					
 				}
@@ -112,9 +133,15 @@ public static byte menu(){
 				Print.outSln("0.- Salir del Programa");
 				
 				if(memory_exists){
-					for (int i = 0; i < opciones.length; i++) {
-						Print.outSln(opciones[i]);
+					if(method == 0){
+						Print.outSln("2.- Ingresar un Proceso y Asignarlo por Primer Ajuste");
+						Print.outSln("3.- Ingresar un Proceso y Asignarlo por Mejor Ajuste");
+					}else if(method == 1){
+						Print.outSln("2.- Ingresar un Proceso y Asignarlo por Primer Ajuste");
+					}else if(method == 2){
+						Print.outSln("3.- Ingresar un Proceso y Asignarlo por Mejor Ajuste");
 					}
+					Print.outSln("4.- Mostrar la memoria RAM");
 				}else{
 					Print.outSln("1.- Ir a comprar Memoria RAM");
 				}
