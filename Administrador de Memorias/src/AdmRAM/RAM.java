@@ -71,6 +71,7 @@ public class RAM{
 				}
 				case 3:{
 					if((method == 0) || (method == 2)){
+						method = 2;
 						int pSize = C.unsigned(C.in_int("Ingrese el tama�o del proceso: "));
 						Proceso nuevo = new Proceso(pSize);
 						assingProcessBM(nuevo);
@@ -86,11 +87,33 @@ public class RAM{
 				case 4:{
 					//new GMemory(memory);
 					RAMinfo();
-					Print.endl(1);
-					Print.outSln("Procesos en Espera: ");
-					processWaitInfo();
 					Print.pausa("PRESIONE ENTER PARA CONTINUAR");
 					break;
+				}
+				case 5:{
+					RAMinfo();
+					int segment_position = 0;
+					boolean errorLiberar = true;
+					do{
+					segment_position = C.unsigned(C.in_int("Escoja que proceso de la RAM quiere liberar: "));
+					if(segment_position == 0){
+						Print.errorCen("No se puede liberar el primer segmento \n"
+								+ "          debido a que esta reservado para el sistema operativo");
+						errorLiberar = true;
+					}else if(segment_position > memory.size()){
+						Print.errorCen("Seleccion invalida, vuelva a intentar");
+						errorLiberar = true;
+					}else if(!memory.get(segment_position).isBusy()){
+						Print.errorCen("La memoria no se puede liberar porque ese segmento ya estaba libre" );
+						errorLiberar = true;
+					}
+					else{
+						errorLiberar = false;
+					}
+					}while(errorLiberar);
+					dealocateProcess(segment_position);
+					break;
+					
 				}
 				
 				case 10:{
@@ -117,11 +140,7 @@ public class RAM{
 
 public static byte menu(){
 	
-	String[] opciones = {
-		"2.- Ingresar un Proceso y Asignarlo por Primer Ajuste",
-		"3.- Ingresar un Proceso y Asignarlo por Mejor Ajuste",
-		"4.- Mostrar la memoria RAM"
-	};
+
    byte opc;
 			Print.separador();
 				Print.outCenln("Administrador de Memoria");
@@ -145,6 +164,9 @@ public static byte menu(){
 				}else{
 					Print.outSln("1.- Ir a comprar Memoria RAM");
 				}
+				if(memory.size() > 1){
+					Print.outSln("5.- Poner en espera algun proceso de la memoria");
+				}
 				Print.endl(2);
 				Print.outSln("10.- Acerca del Programa");
 				Print.endl(1);
@@ -167,6 +189,11 @@ public static byte menu(){
 		for (Segment segment : memory) {
 			Print.outSln("Segmento " + memory.indexOf(segment));
 			segment.info();
+		}
+		if(procesos.size() > 0){
+			Print.endl(1);
+			Print.outSln("Procesos en Espera: ");
+			processWaitInfo();
 		}
 	}
 	
@@ -297,12 +324,38 @@ public static byte menu(){
 		return false;
 	}
 	
+	/**
+	 * Libera un segmento de memoria indicado por el parametro
+	 * @param segment_position es la posicion del segmento a liberar
+	 */
 	public static void dealocateProcess(int segment_position){
+		if(validateRunningProcess(segment_position)){
 		Proceso retrieve = memory.get(segment_position).getProcess();
 		retrieve.setWait(true);
 		memory.get(segment_position).setProcess(null);
 		procesos.add(retrieve);
 		cleanMemory();
+		}
+	}
+	
+	public static boolean validateRunningProcess(int segment_position){
+		boolean Liberar = true;
+			if(segment_position == 0){
+				Print.errorCen("No se puede liberar el primer segmento \n"
+						+ "          debido a que esta reservado para el sistema operativo");
+				Liberar = false;
+			}else if(segment_position > memory.size()){
+				Print.errorCen("Seleccion invalida, vuelva a intentar");
+				Liberar = false;
+			}else if(!memory.get(segment_position).isBusy()){
+				Print.errorCen("La memoria no se puede liberar porque ese segmento ya estaba libre" );
+				Liberar = false;
+			}
+			else{
+				Liberar = true;
+			}
+			
+			return Liberar;
 	}
 	
 	public static void cleanMemory(){
