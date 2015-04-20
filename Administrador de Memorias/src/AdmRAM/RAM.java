@@ -83,7 +83,13 @@ public class RAM{
 						method = 2;
 						int pSize = C.unsigned(C.in_int("Ingrese la capacidad del proceso: "));
 						Proceso nuevo = new Proceso(pSize);
-						assingProcessBM(nuevo);
+						if(assingProcessBM(nuevo)){
+							break;
+						}else{
+							nuevo.setWait(true);
+							procesos.add(nuevo);
+						}
+						
 					}else{
 						Print.errorCen("El metodo PRIMER AJUSTE ya fue establecido."
 								+ "\n          Por favor vuelva al menu y presione 2 para seguir ingresando");
@@ -420,7 +426,10 @@ public static byte menu(){
 	System.out.println("Seccion N-511");
 	System.out.println("\n\n");
 	System.out.print("          ");
-	System.out.println("Repositorios de mis otros programas disponibles en:\nURL: https://github.com/Nestyko");
+	System.out.println("Repositorios de este programa disponibles en:\n          "
+			+ "URL: https://github.com/Nestyko/Administrador-de-Memoria.git");
+	System.out.print("          ");
+	System.out.println("NOTA: revisar la rama \"Containing\"");
 	System.out.print("\n");
 	
 	}//acerca_de
