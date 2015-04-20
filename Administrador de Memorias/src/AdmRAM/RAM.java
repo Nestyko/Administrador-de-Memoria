@@ -1,5 +1,6 @@
 package AdmRAM;
 import java.util.ArrayList;
+
 import aux_classes.input_output.*;
 
 public class RAM{
@@ -18,7 +19,15 @@ public class RAM{
 			byte opc;
 			do{
 			Print.cls();
+			if(memory_exists){
+				RAMinfo();
+				Print.endl(2);
+			}
 			opc = menu();
+			if((!memory_exists) && (opc != 0) && (opc != 1) && (opc != 10)){
+				Print.errorCen("Seleccion invalida. Intente ir a comprar memoria");
+				continue;
+			}
 			Print.cls();
 			switch(opc){
 				case 0:{
@@ -54,7 +63,7 @@ public class RAM{
 				case 2:{
 					if((method == 0) || (method == 1)){
 						method = 1;
-						int pSize = C.unsigned(C.in_int("Ingrese el tama�o del proceso: "));
+						int pSize = C.unsigned(C.in_int("Ingrese la capacidad del proceso: "));
 						Proceso nuevo = new Proceso(pSize);
 						if(assingProcessFM(nuevo)){
 							break;
@@ -72,7 +81,7 @@ public class RAM{
 				case 3:{
 					if((method == 0) || (method == 2)){
 						method = 2;
-						int pSize = C.unsigned(C.in_int("Ingrese el tama�o del proceso: "));
+						int pSize = C.unsigned(C.in_int("Ingrese la capacidad del proceso: "));
 						Proceso nuevo = new Proceso(pSize);
 						assingProcessBM(nuevo);
 					}else{
@@ -84,10 +93,20 @@ public class RAM{
 					break;
 					
 				}
-				case 4:{
+				/*case 4:{
 					//new GMemory(memory);
 					RAMinfo();
 					Print.pausa("PRESIONE ENTER PARA CONTINUAR");
+					break;
+				}*/
+				case 4:{
+					processWaitInfo();
+					int selection = C.unsigned(C.in_int("Seleccione el proceso a asignar: "));
+					if(method == 1){
+						assingProcessFM(procesos.remove(selection));
+					}else if(method == 2){
+						assingProcessBM(procesos.remove(selection));
+					}
 					break;
 				}
 				case 5:{
@@ -160,11 +179,15 @@ public static byte menu(){
 					}else if(method == 2){
 						Print.outSln("3.- Ingresar un Proceso y Asignarlo por Mejor Ajuste");
 					}
-					Print.outSln("4.- Mostrar la memoria RAM");
 				}else{
 					Print.outSln("1.- Ir a comprar Memoria RAM");
 				}
-				if(memory.size() > 1){
+				
+				if(procesos.size() > 0){
+					Print.outSln("4.- Asignar un proceso en espera a la memoria");
+				}
+				if(exeProcesses() > 1){
+					Print.endl(2);
 					Print.outSln("5.- Poner en espera algun proceso de la memoria");
 				}
 				Print.endl(2);
@@ -175,6 +198,20 @@ public static byte menu(){
 							
 
 	}//menu
+	
+	/**
+	 * Search the memory for busy processes
+	 * @return the quantity of busy processes
+	 */
+	public static int exeProcesses(){
+		int q = 0;
+		for(Segment segment : memory){
+			if(segment.isBusy()){
+				q++;
+			}
+		}
+		return q;
+	}
 	
 	public static void processWaitInfo(){
 		for(Proceso process: procesos){
